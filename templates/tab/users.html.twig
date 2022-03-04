@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello TabController!{% endblock %}
+
+{% block body %}
+
+
+<div class="container">
+    <h1>Hello</h1>
+
+    <table class="table table-striped text-capitalize">
+
+        <thead>
+            <tr>
+                <th class="scop">Age</th>
+                <th class="scop">Nom</th>
+                <th class="scop">Prénom</th>
+            </tr>
+
+        </thead>
+        <tbody>
+            {# {% for user in users %}
+            <tr>
+                <td class="scop">{{user.age}}</td>
+                <td class="scop">{{user.firstname}}</td>
+                <td class="scop">{{user.lastname}}</td>
+            </tr>
+            {% endfor %} #}
+            {# on aurait pu faire : #}
+            {% for user in users %}
+            <tr class="table-{% if loop.index is odd %}danger{%else%}warning{%endif%}">
+                <td class="scop">{{user.age}}</td>
+                <td class="scop">{{user.firstname}}</td>
+                <td class="scop">{{user.lastname}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="alert alert-info">
+        <p>Total des utilisateurs : {{users | length}}</p>
+    </div>
+
+</div>
+{% endblock %}
