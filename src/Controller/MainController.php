@@ -17,4 +17,14 @@ class MainController extends AbstractController
             'controller_name' => 'MainController',
         ]);
     }
+
+    #[Route('/', name: 'app_template')]
+    public function template(): Response
+    {
+        return $this->render('template.html.twig', [
+            'firstname'=>'Jeannet',
+            'lastname'=>'julie',
+            'controller_name' => 'MainController',
+        ]);
+    }
 }

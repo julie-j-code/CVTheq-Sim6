@@ -1,12 +1,14 @@
-{% extends 'base.html.twig' %}
+{% extends 'template.html.twig' %}
 
-{% block title %}Hello TabController!{% endblock %}
+{% block title %}Utilisateurs{% endblock %}
+
+{% block PageTitle %} Utilisateurs
+    
+{% endblock %}
 
 {% block body %}
 
 
-<div class="container">
-    <h1>Hello</h1>
 
     <table class="table table-striped text-capitalize">
 
@@ -19,21 +21,21 @@
 
         </thead>
         <tbody>
-            {# {% for user in users %}
+            {% for user in users %}
             <tr>
                 <td class="scop">{{user.age}}</td>
                 <td class="scop">{{user.firstname}}</td>
                 <td class="scop">{{user.lastname}}</td>
             </tr>
-            {% endfor %} #}
+            {% endfor %}
             {# on aurait pu faire : #}
-            {% for user in users %}
+            {# {% for user in users %}
             <tr class="table-{% if loop.index is odd %}danger{%else%}warning{%endif%}">
                 <td class="scop">{{user.age}}</td>
                 <td class="scop">{{user.firstname}}</td>
                 <td class="scop">{{user.lastname}}</td>
             </tr>
-            {% endfor %}
+            {% endfor %} #}
         </tbody>
     </table>
 
@@ -41,5 +43,4 @@
         <p>Total des utilisateurs : {{users | length}}</p>
     </div>
 
-</div>
 {% endblock %}
