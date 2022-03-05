@@ -1,0 +1,31 @@
+{% extends 'template.html.twig' %}
+
+{% block title %}Liste des candidats{% endblock %}
+
+{% block PageTitle %}
+Liste des Candidats
+{% endblock %}
+
+{% block body %}
+<div class="row">
+
+    {% for candidat in candidats %}
+    <div class="col-sm-3">
+        <div class="card  m-1">
+            <div class="card-body">
+                <h5 class="card-title text-capitalize">{{candidat.firstname}} {{candidat.lastname}}</h5>
+                <h6 class="card-subtitle mb-2 text-muted">Age : {{candidat.age}} ans</h6>
+                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the
+                    card's
+                    content.</p>
+                <a href="#" class="card-link">Card link to do</a>
+                <a href="#" class="card-link">Another link</a>
+            </div>
+        </div>
+    </div>
+
+    {% endfor %}
+</div>
+
+
+{% endblock %}

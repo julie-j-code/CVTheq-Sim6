@@ -1,0 +1,12 @@
+{% extends 'template.html.twig' %}
+
+{% block title %}Détail Candidat{% endblock %}
+
+{% block PageTitle %}
+Détails Candidat
+{% endblock %}
+
+{% block body %}
+<p><span class="text-capitalize">{{ candidat.firstname }} {{ candidat.lastname }}</span> a {{ candidat.age }} ans</p>
+
+{% endblock %}
