@@ -16,14 +16,35 @@ use Symfony\Component\Routing\Annotation\Route;
 class CandidatsController extends AbstractController
 {
     #[Route('/', name: 'candidats')]
-    public function index(Request $request, CandidatsRepository $candidatsRepository): Response
+    public function index(CandidatsRepository $candidatsRepository): Response
 
     {
 
         $candidats = $candidatsRepository->findAll();
         return $this->render('candidats/index.html.twig', [
-            'candidats'=>$candidats]);
+            'candidats' => $candidats
+        ]);
+    }
 
+    #[Route('/{id<\d+>}', name: 'candidat-detail')]
+    // public function detail(CandidatsRepository $candidatsRepository, $id): Response
+    public function detail(Candidats $candidat = null): Response
+
+    {
+        // on peut ne passer que l'entité à function, grâce au Param convertor...
+        // $candidat = $candidatsRepository->find($id);
+        if (!$candidat) {
+            $this->addFlash(
+                'error',
+                // "Le candidat d'id $id n'existe pas"
+                "Ce candidat n'existe pas"
+            );
+            return $this->redirectToRoute('candidats');
+        }
+
+        return $this->render('candidats/details.html.twig', [
+            'candidat' => $candidat
+        ]);
     }
 
 
