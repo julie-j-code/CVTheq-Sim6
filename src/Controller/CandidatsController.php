@@ -63,4 +63,23 @@ class CandidatsController extends AbstractController
         // return $this->render('candidats/index.html.twig', [
         //     'candidat'=>$candidat]);
     }
+
+    #[Route('/pagination/{page?1}/{nbr?8}', name: 'pagination')]
+    public function pagination(CandidatsRepository $candidatsRepository, $page, $nbr): Response
+
+    {
+
+        $nbCandidats=$candidatsRepository->count([]);
+        $nbPages=ceil($nbCandidats/$nbr);
+        $candidats = $candidatsRepository->findBy([],[],$nbr, ($page-1)*$nbr);
+        return $this->render('candidats/index.html.twig', [
+            'candidats' => $candidats,
+            'isPaginated' => true,
+            'nbPages' => $nbPages,
+            'page' => $page,
+            'nbr' => $nbr
+        ]);
+    }
+
+
 }

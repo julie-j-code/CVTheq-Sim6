@@ -23,8 +23,37 @@ Liste des Candidats
             </div>
         </div>
     </div>
-
     {% endfor %}
+
+    {% if isPaginated %}
+
+    <nav aria-label="Page navigation example">
+        <ul class="pagination">
+            {% if page != 1 %}
+
+            <li class="page-item">
+                <a class="page-link" href="{{path('pagination',{page:page-1, nbr:nbr} )}}" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            {% endif %}
+            {% for i in range(1,nbPages) %}
+            <li class="page-item"><a class="page-link" href="{{path('pagination',{page:i, nbr:nbr} )}}">{{i}}</a></li>
+            {% endfor %}
+
+            {% if page != nbPages %}
+            <li class="page-item">
+                <a class="page-link" href="{{path('pagination',{page:page+1, nbr:nbr} )}}" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+
+    {% endif %}
+
+
 </div>
 
 
