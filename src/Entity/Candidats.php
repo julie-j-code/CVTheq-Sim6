@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\CandidatsRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CandidatsRepository::class)]
@@ -21,6 +23,20 @@ class Candidats
 
     #[ORM\Column(type: 'smallint')]
     private $age;
+
+    #[ORM\OneToOne(inversedBy: 'candidats', targetEntity: Profiles::class, cascade: ['persist', 'remove'])]
+    private $profiles;
+
+    #[ORM\ManyToMany(targetEntity: Hobbies::class)]
+    private $hobbies;
+
+    #[ORM\ManyToOne(targetEntity: Jobs::class, inversedBy: 'candidats')]
+    private $jobs;
+
+    public function __construct()
+    {
+        $this->hobbies = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -59,6 +75,54 @@ class Candidats
     public function setAge(int $age): self
     {
         $this->age = $age;
+
+        return $this;
+    }
+
+    public function getProfiles(): ?Profiles
+    {
+        return $this->profiles;
+    }
+
+    public function setProfiles(?Profiles $profiles): self
+    {
+        $this->profiles = $profiles;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Hobbies>
+     */
+    public function getHobbies(): Collection
+    {
+        return $this->hobbies;
+    }
+
+    public function addHobby(Hobbies $hobby): self
+    {
+        if (!$this->hobbies->contains($hobby)) {
+            $this->hobbies[] = $hobby;
+        }
+
+        return $this;
+    }
+
+    public function removeHobby(Hobbies $hobby): self
+    {
+        $this->hobbies->removeElement($hobby);
+
+        return $this;
+    }
+
+    public function getJobs(): ?Jobs
+    {
+        return $this->jobs;
+    }
+
+    public function setJobs(?Jobs $jobs): self
+    {
+        $this->jobs = $jobs;
 
         return $this;
     }
