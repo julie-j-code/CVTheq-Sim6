@@ -3,10 +3,12 @@
 namespace App\Controller;
 
 use App\Entity\Candidats;
+use App\Form\CandidatsType;
 use App\Repository\CandidatsRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -60,20 +62,29 @@ class CandidatsController extends AbstractController
 
 
     #[Route('/add', name: 'candidats_add')]
-    public function addCandidat(ObjectManager $manager): Response
-    // public function addCandidat(ManagerRegistry $doctrine): Response
-    {
+    public function addCandidat(ManagerRegistry $doctrine, Request $request): Response
+     {
 
-        $candidat = new Candidats();
-        // $manager = $doctrine->getManager();
-        $candidat->setAge(30);
-        $candidat->setFirstname('caroline');
-        $candidat->setLastname('laville');
-        $manager->persist($candidat);
-        $manager->flush();
-        // return $this->render('candidats/index.html.twig', [
-        //     'candidat'=>$candidat]);
+       $manager=$doctrine->getManager();
+        $candidat=new Candidats;
+        $form = $this->createForm(CandidatsType::class, $candidat);
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() ){
+            $manager->persist($candidat);
+            $manager->flush();
+            $this->addFlash(
+               'success',
+               'le candidat a bien été ajouté'
+            );
+            return $this->redirectToRoute('candidats');
+        }
+
+        return $this->render('candidats/add-candidat.html.twig', [
+            'form'=>$form->createView()]);
     }
+
+
 
     #[Route('/update/{id}/{firstname}/{lastname}/{age}', name: 'candidats_update')]
     // public function updateCandidat(CandidatsRepository $candidatsRepository, $id, $firstname, $lastname,$age, ManagerRegistry $doctrine): Response
