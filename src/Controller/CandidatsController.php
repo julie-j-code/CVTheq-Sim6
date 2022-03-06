@@ -26,6 +26,17 @@ class CandidatsController extends AbstractController
         ]);
     }
 
+    #[Route('/interval/{ageMin}/{ageMax}', name: 'interval')]
+    public function interval(CandidatsRepository $candidatsRepository, $ageMin, $ageMax): Response
+
+    {
+
+        $candidats = $candidatsRepository->findCandidatsByAgeInterval($ageMin, $ageMax);
+        return $this->render('candidats/index.html.twig', [
+            'candidats' => $candidats
+        ]);
+    }
+
     #[Route('/{id<\d+>}', name: 'candidat-detail')]
     // public function detail(CandidatsRepository $candidatsRepository, $id): Response
     public function detail(Candidats $candidat = null): Response
@@ -94,6 +105,8 @@ class CandidatsController extends AbstractController
         return $this->redirectToRoute('pagination');
 
     }
+
+
 
     #[Route('/pagination/{page?1}/{nbr?8}', name: 'pagination')]
     public function pagination(CandidatsRepository $candidatsRepository, $page, $nbr): Response

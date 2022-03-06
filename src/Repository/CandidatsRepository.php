@@ -45,22 +45,22 @@ class CandidatsRepository extends ServiceEntityRepository
         }
     }
 
-    // /**
-    //  * @return Candidats[] Returns an array of Candidats objects
-    //  */
-    /*
-    public function findByExampleField($value)
+   /**
+      * @return Candidats[] Returns an array of Candidats objects
+      *
+    */
+    public function findCandidatsByAgeInterval($ageMin, $ageMax)
     {
         return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('c.id', 'ASC')
-            ->setMaxResults(10)
+            ->andWhere('c.age >= :ageMin and c.age<= :ageMax')
+            // ->setParameter('ageMin', $ageMin)
+            // ->setParameter('ageMax', $ageMax)
+            ->setParameters(['ageMax'=> $ageMax, 'ageMin'=> $ageMin ])
             ->getQuery()
             ->getResult()
         ;
     }
-    */
+  
 
     /*
     public function findOneBySomeField($value): ?Candidats

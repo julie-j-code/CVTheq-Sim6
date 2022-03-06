@@ -25,7 +25,7 @@ Liste des Candidats
     </div>
     {% endfor %}
 
-    {% if isPaginated %}
+    {% if isPaginated is defined and isPaginated %}
 
     <nav aria-label="Page navigation example">
         <ul class="pagination">
