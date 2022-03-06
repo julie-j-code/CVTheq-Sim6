@@ -64,6 +64,37 @@ class CandidatsController extends AbstractController
         //     'candidat'=>$candidat]);
     }
 
+    #[Route('/update/{id}/{firstname}/{lastname}/{age}', name: 'candidats_update')]
+    // public function updateCandidat(CandidatsRepository $candidatsRepository, $id, $firstname, $lastname,$age, ManagerRegistry $doctrine): Response
+    public function updateCandidat(ManagerRegistry $doctrine,Candidats $candidat = null, $id, $firstname, $lastname,$age ): Response
+    {
+
+        // $candidat = $candidatsRepository->find($id);
+        $manager = $doctrine->getManager();
+        if($candidat){
+
+            $candidat->setAge($age);
+            $candidat->setFirstname($firstname);
+            $candidat->setLastname($lastname);
+            $manager->persist($candidat);
+            $manager->flush();
+            $this->addFlash(
+               'success',
+               'Le candidat a bien été mis à jour'
+            );
+
+        } else{
+
+            $this->addFlash(
+               'error',
+               'La personne n\'existe pas'
+            );
+        }
+ 
+        return $this->redirectToRoute('pagination');
+
+    }
+
     #[Route('/pagination/{page?1}/{nbr?8}', name: 'pagination')]
     public function pagination(CandidatsRepository $candidatsRepository, $page, $nbr): Response
 
