@@ -23,6 +23,8 @@ class Jobs
     private $designation;
 
     #[ORM\OneToMany(mappedBy: 'jobs', targetEntity: Candidats::class)]
+    // #[ORM\JoinColumn(name:"candidats_id", referencedColumnName:"id", onDelete:"CASCADE")]
+
     private $candidats;
 
     public function __construct()

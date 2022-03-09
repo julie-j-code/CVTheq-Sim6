@@ -63,60 +63,72 @@ class CandidatsController extends AbstractController
 
     #[Route('/add', name: 'candidats_add')]
     public function addCandidat(ManagerRegistry $doctrine, Request $request): Response
-     {
+    {
 
-       $manager=$doctrine->getManager();
-        $candidat=new Candidats;
+        $manager = $doctrine->getManager();
+        $candidat = new Candidats;
         $form = $this->createForm(CandidatsType::class, $candidat);
         $form->handleRequest($request);
 
-        if($form->isSubmitted() ){
+        if ($form->isSubmitted()) {
             $manager->persist($candidat);
             $manager->flush();
             $this->addFlash(
-               'success',
-               'le candidat a bien été ajouté'
+                'success',
+                'le candidat a bien été ajouté'
             );
             return $this->redirectToRoute('candidats');
         }
 
         return $this->render('candidats/add-candidat.html.twig', [
-            'form'=>$form->createView()]);
+            'form' => $form->createView()
+        ]);
     }
 
 
-
-    #[Route('/update/{id}/{firstname}/{lastname}/{age}', name: 'candidats_update')]
-    // public function updateCandidat(CandidatsRepository $candidatsRepository, $id, $firstname, $lastname,$age, ManagerRegistry $doctrine): Response
-    public function updateCandidat(ManagerRegistry $doctrine,Candidats $candidat = null, $id, $firstname, $lastname,$age ): Response
+    // initialement, pour l'exercice, on  avait fait un update totalement manuel sans passer par un formulaire...
+    #[Route('/edit/{id?0}', name: 'candidats-edit')]
+    public function editCandidats(CandidatsRepository $candidatsRepository, $id, ManagerRegistry $doctrine, Request $request): Response
     {
-
-        // $candidat = $candidatsRepository->find($id);
-        $manager = $doctrine->getManager();
-        if($candidat){
-
-            $candidat->setAge($age);
-            $candidat->setFirstname($firstname);
-            $candidat->setLastname($lastname);
-            $manager->persist($candidat);
-            $manager->flush();
-            $this->addFlash(
-               'success',
-               'Le candidat a bien été mis à jour'
-            );
-
-        } else{
-
-            $this->addFlash(
-               'error',
-               'La personne n\'existe pas'
-            );
+        
+        $candidat = $candidatsRepository->find($id);
+        $new = false;
+        //$this->getDoctrine() : Version Sf <= 5
+        if (!$candidat) {
+            $new = true;
+            $candidat = new Candidats();
         }
- 
-        return $this->redirectToRoute('pagination');
+
+        // $Candidats est l'image de notre formulaire
+        $form = $this->createForm(CandidatsType::class, $candidat);
+        // Mon formulaire va aller traiter la requete
+        $form->handleRequest($request);
+        //Est ce que le formulaire a été soumis
+        if($form->isSubmitted()) {
+            // si oui,
+            // on va ajouter l'objet Candidats dans la base de données
+            $manager = $doctrine->getManager();
+            $manager->persist($candidat);
+
+            $manager->flush();
+            // Afficher un mssage de succès
+            if($new) {
+                $message = " a été ajouté avec succès";
+            } else {
+                $message = " a été mis à jour avec succès";
+            }
+            $this->addFlash('success',$candidat->getFirstName(). $message );
+            // Rediriger verts la liste des Candidats
+            return $this->redirectToRoute('pagination');
+        } else {
+            //Sinon
+            //On affiche notre formulaire
+            return $this->render('candidats/add-candidat.html.twig', [
+                'form' => $form->createView()
+            ]);
+        }
 
     }
-
 
 
     #[Route('/pagination/{page?1}/{nbr?8}', name: 'pagination')]
@@ -124,9 +136,9 @@ class CandidatsController extends AbstractController
 
     {
 
-        $nbCandidats=$candidatsRepository->count([]);
-        $nbPages=ceil($nbCandidats/$nbr);
-        $candidats = $candidatsRepository->findBy([],[],$nbr, ($page-1)*$nbr);
+        $nbCandidats = $candidatsRepository->count([]);
+        $nbPages = ceil($nbCandidats / $nbr);
+        $candidats = $candidatsRepository->findBy([], [], $nbr, ($page - 1) * $nbr);
         return $this->render('candidats/index.html.twig', [
             'candidats' => $candidats,
             'isPaginated' => true,
@@ -135,6 +147,4 @@ class CandidatsController extends AbstractController
             'nbr' => $nbr
         ]);
     }
-
-
 }
