@@ -7,13 +7,15 @@ use App\Form\CandidatsType;
 use App\Repository\CandidatsRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\ObjectManager;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/candidats')]
+#[Route('/candidats'), IsGranted('ROLE_USER')]
 
 class CandidatsController extends AbstractController
 {
@@ -65,6 +67,7 @@ class CandidatsController extends AbstractController
     public function addCandidat(ManagerRegistry $doctrine, Request $request): Response
     {
 
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $manager = $doctrine->getManager();
         $candidat = new Candidats;
         $form = $this->createForm(CandidatsType::class, $candidat);
@@ -90,7 +93,7 @@ class CandidatsController extends AbstractController
     #[Route('/edit/{id?0}', name: 'candidats-edit')]
     public function editCandidats(CandidatsRepository $candidatsRepository, $id, ManagerRegistry $doctrine, Request $request): Response
     {
-        
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $candidat = $candidatsRepository->find($id);
         $new = false;
         //$this->getDoctrine() : Version Sf <= 5
@@ -104,7 +107,7 @@ class CandidatsController extends AbstractController
         // Mon formulaire va aller traiter la requete
         $form->handleRequest($request);
         //Est ce que le formulaire a été soumis
-        if($form->isSubmitted()) {
+        if ($form->isSubmitted()) {
             // si oui,
             // on va ajouter l'objet Candidats dans la base de données
             $manager = $doctrine->getManager();
@@ -112,12 +115,12 @@ class CandidatsController extends AbstractController
 
             $manager->flush();
             // Afficher un mssage de succès
-            if($new) {
+            if ($new) {
                 $message = " a été ajouté avec succès";
             } else {
                 $message = " a été mis à jour avec succès";
             }
-            $this->addFlash('success',$candidat->getFirstName(). $message );
+            $this->addFlash('success', $candidat->getFirstName() . $message);
             // Rediriger verts la liste des Candidats
             return $this->redirectToRoute('pagination');
         } else {
@@ -127,8 +130,31 @@ class CandidatsController extends AbstractController
                 'form' => $form->createView()
             ]);
         }
-
     }
+
+
+    #[Route('/delete/{id}', name: 'candidats-delete')]
+
+    public function deletePersonne(Candidats $candidat = null, ManagerRegistry $doctrine): RedirectResponse
+    {
+
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        // Récupérer la personne
+        if ($candidat) {
+            // Si la personne existe => le supprimer et retourner un flashMessage de succés
+            $manager = $doctrine->getManager();
+            // Ajoute la fonction de suppression dans la transaction
+            $manager->remove($candidat);
+            // Exécuter la transacition
+            $manager->flush();
+            $this->addFlash('success', "La personne a été supprimé avec succès");
+        } else {
+            //Sinon  retourner un flashMessage d'erreur
+            $this->addFlash('error', "Personne innexistante");
+        }
+        return $this->redirectToRoute('pagination');
+    }
+
 
 
     #[Route('/pagination/{page?1}/{nbr?8}', name: 'pagination')]

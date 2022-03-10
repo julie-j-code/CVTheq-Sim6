@@ -22,7 +22,10 @@ Liste des Candidats
 
                 <a href="{{path('candidat-detail', {id:candidat.id})}}" class="card-link">Détails</a>
                 {# <a href="{{ path('candidats-delete', {id: candidat.id}) }}" class="card-link">Delete</a> #}
+                {% if is_granted('ROLE_ADMIN') %}
                 <a href="{{ path('candidats-edit', {id: candidat.id}) }}" class="card-link">Editer</a>
+                <a href="{{ path('candidats-delete', {id: candidat.id}) }}" class="card-link">Supprimer</a>
+                {% endif %}
             </div>
         </div>
     </div>
