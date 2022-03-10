@@ -7,18 +7,16 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class TabController extends AbstractController
+class UsersController extends AbstractController
 {
-
-    #[Route('/tab/users', name: 'app_tab_users')]
-    public function users(UsersRepository $repo): Response
+    #[Route('/users', name: 'users')]
+    public function index(UsersRepository $repo): Response
     {
         
         $users=$repo->findAll();
-
-        return $this->render('tab/users.html.twig', [
-            'users'=>$users
+        return $this->render('users/index.html.twig', [
+            'users' => $users,
+            'controller_name' => 'UsersController',
         ]);
     }
-    
 }

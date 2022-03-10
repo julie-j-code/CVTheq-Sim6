@@ -61,7 +61,7 @@ class CandidatsController extends AbstractController
     }
 
 
-    #[Route('/add', name: 'candidats_add')]
+    #[Route('/add', name: 'candidats-add')]
     public function addCandidat(ManagerRegistry $doctrine, Request $request): Response
     {
 
