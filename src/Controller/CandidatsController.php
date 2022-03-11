@@ -2,23 +2,31 @@
 
 namespace App\Controller;
 
+use addCandidatEvent;
 use App\Entity\Candidats;
 use App\Form\CandidatsType;
 use App\Repository\CandidatsRepository;
-use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\ObjectManager;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\Extension\Core\Type\FormType;
-use Symfony\Component\HttpFoundation\RedirectResponse;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[Route('/candidats'), IsGranted('ROLE_USER')]
 
 class CandidatsController extends AbstractController
 {
+
+    public function __construct(
+        private EventDispatcherInterface $dispatcher
+    ) {
+    }
+
     #[Route('/', name: 'candidats')]
     public function index(CandidatsRepository $candidatsRepository): Response
 
@@ -67,6 +75,7 @@ class CandidatsController extends AbstractController
     public function addCandidat(ManagerRegistry $doctrine, Request $request): Response
     {
 
+
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $manager = $doctrine->getManager();
         $candidat = new Candidats;
@@ -76,6 +85,8 @@ class CandidatsController extends AbstractController
         if ($form->isSubmitted()) {
             $manager->persist($candidat);
             $manager->flush();
+            $addCandidatEvent = new addCandidatEvent($candidat);
+            $this->dispatcher->dispatch($addCandidatEvent, addCandidatEvent::ADD_CANDIDAT_EVENT);
             $this->addFlash(
                 'success',
                 'le candidat a bien été ajouté'
