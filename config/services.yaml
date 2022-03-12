@@ -10,6 +10,8 @@ services:
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+        bind:
+            $replyTo: 'jeannet.julie@gmail.com'
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
@@ -23,9 +25,13 @@ services:
     App\EventListener\CandidatsListener:
         tags:
             - { name: kernel.event_listener, event: candidats-add }
-#            - { name: kernel.event_listener, event: kernel.request, method: logKernelRequest, priority: -5000 }
-            # - { name: kernel.event_listener, event: personne.list_alls, method: onListAllPersonnes }
+            # - { name: kernel.event_listener, event: kernel.request, method: logKernelRequest, priority: -5000 }
+            - { name: kernel.event_listener, event: pagination }
             # - { name: kernel.event_listener, event: personne.list_alls, method: onListAllPersonnes2, priority: 100 }  
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+    # App\Service\MailerService:
+    #     arguments:
+    #     $replyTo: 'jeannet.julie@gmail.com'

@@ -1,14 +1,11 @@
 <?php
 
 use App\Entity\Candidats;
-use Symfony\Component\EventDispatcher\GenericEvent;
+use Symfony\Contracts\EventDispatcher\Event;
 
-$event = new GenericEvent($subject);
-$dispatcher->dispatch($event, 'foo');
 
-class AddCandidatEvent
+class AddCandidatEvent extends Event
 {
-
 
     const ADD_CANDIDAT_EVENT = 'candidats-add';
 
@@ -18,10 +15,5 @@ class AddCandidatEvent
         return $this->candidat;
     }
 
-    // public function handler(GenericEvent $event)
-    // {
-    //     if ($event->getSubject() instanceof Foo) {
-    //         // ...
-    //     }
-    // }
+
 }

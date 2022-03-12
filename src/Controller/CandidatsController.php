@@ -4,7 +4,9 @@ namespace App\Controller;
 
 use addCandidatEvent;
 use App\Entity\Candidats;
+use ListAllCandidatsEvent;
 use App\Form\CandidatsType;
+use App\Services\MailerService;
 use App\Repository\CandidatsRepository;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Persistence\ManagerRegistry;
@@ -72,9 +74,8 @@ class CandidatsController extends AbstractController
 
 
     #[Route('/add', name: 'candidats-add')]
-    public function addCandidat(ManagerRegistry $doctrine, Request $request): Response
+    public function addCandidat(ManagerRegistry $doctrine, Request $request, MailerService $mailer): Response
     {
-
 
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $manager = $doctrine->getManager();
@@ -85,12 +86,17 @@ class CandidatsController extends AbstractController
         if ($form->isSubmitted()) {
             $manager->persist($candidat);
             $manager->flush();
-            $addCandidatEvent = new addCandidatEvent($candidat);
-            $this->dispatcher->dispatch($addCandidatEvent, addCandidatEvent::ADD_CANDIDAT_EVENT);
+            $message = " a été ajouté avec succès";
+            $addCandidatEvent = new AddCandidatEvent($candidat);
+            $this->dispatcher->dispatch($addCandidatEvent, AddCandidatEvent::ADD_CANDIDAT_EVENT);
+            $mailMessage = $candidat->getFirstname().' '.$candidat->getLastname().' '.$message;
             $this->addFlash(
                 'success',
                 'le candidat a bien été ajouté'
             );
+            $mailer->sendEmail(content :  $mailMessage);
+
+            
             return $this->redirectToRoute('candidats');
         }
 
@@ -176,6 +182,10 @@ class CandidatsController extends AbstractController
         $nbCandidats = $candidatsRepository->count([]);
         $nbPages = ceil($nbCandidats / $nbr);
         $candidats = $candidatsRepository->findBy([], [], $nbr, ($page - 1) * $nbr);
+        // EventListener
+        $listAllCandidatsEvent = new ListAllCandidatsEvent(count($candidats));
+        $this->dispatcher->dispatch($listAllCandidatsEvent, ListAllCandidatsEvent::LIST_CANDIDAT_EVENT);
+        
         return $this->render('candidats/index.html.twig', [
             'candidats' => $candidats,
             'isPaginated' => true,

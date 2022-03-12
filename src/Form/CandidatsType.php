@@ -25,6 +25,7 @@ class CandidatsType extends AbstractType
             // ->add('updatedAt')
             ->add('profiles', EntityType::class,[
                 'expanded'=>true,
+                'required' => false,
                 'class'=>Profiles::class, 
                 'multiple'=>false,
             ])
