@@ -20,15 +20,17 @@ class TodosType extends AbstractType
             ->add('content')
            // si c'est le super admin qui gère l'affectation des tâches
            //    faudra juste conditionner l'accès au lien d'ajout depuis le template...
-            ->add('user', EntityType::class, [
-                'expanded'=>true,
-                'class'=>Users::class,
-                'multiple'=>false,
-                'query_builder'=>function(UsersRepository $repo){
-                    return $repo->createQueryBuilder('u')
-                    ->orderBy('u.email', 'ASC');
-                }
-            ])
+            // ->add('user', EntityType::class, [
+            //     'expanded'=>true,
+            //     'class'=>Users::class,
+            //     'multiple'=>false,
+            //     'query_builder'=>function(UsersRepository $repo){
+            //         return $repo->createQueryBuilder('u')
+            //         ->orderBy('u.email', 'ASC');
+            //     }
+            // ])
+
+            // option 2 : c'est l'utilisateur authentifié qui peut s'ajouter des todos
             ->add('edit', SubmitType::class)
         ;
     }
