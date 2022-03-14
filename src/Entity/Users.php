@@ -29,6 +29,9 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'boolean')]
     private $isVerified = false;
 
+    #[ORM\Column(type: 'string', length:255, nullable:true)]
+    private $pictureFilename;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -42,6 +45,18 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     public function setEmail(string $email): self
     {
         $this->email = $email;
+
+        return $this;
+    }
+
+    public function getPictureFilename()
+    {
+        return $this->pictureFilename;
+    }
+
+    public function setPictureFilename($pictureFilename)
+    {
+        $this->brochureFilename = $pictureFilename;
 
         return $this;
     }

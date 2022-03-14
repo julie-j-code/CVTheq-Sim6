@@ -1,4 +1,4 @@
-{% extends 'base.html.twig' %}
+{% extends 'template.html.twig' %}
 
 {% block title %}Register{% endblock %}
 
@@ -15,6 +15,9 @@
             label: 'Password'
         }) }}
         {{ form_row(registrationForm.agreeTerms) }}
+
+        {# ajout photo utilisateur optionnelle #}
+        {{ form_row(registrationForm.picture) }}
 
         <button type="submit" class="btn">Register</button>
     {{ form_end(registrationForm) }}
