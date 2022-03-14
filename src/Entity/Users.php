@@ -32,6 +32,9 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'string', length:255, nullable:true)]
     private $pictureFilename;
 
+    #[ORM\ManyToOne(targetEntity: Todos::class, inversedBy: 'user')]
+    private $todos;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -124,5 +127,22 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
         $this->isVerified = $isVerified;
 
         return $this;
+    }
+
+    public function getTodos(): ?Todos
+    {
+        return $this->todos;
+    }
+
+    public function setTodos(?Todos $todos): self
+    {
+        $this->todos = $todos;
+
+        return $this;
+    }
+
+    public function __toString():string
+    {
+        return $this->email;
     }
 }
