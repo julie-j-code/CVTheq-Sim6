@@ -42,6 +42,9 @@ class Candidats
     #[ORM\Column(type: 'string', length:255, nullable:true)]
     private $pictureFilename;
 
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private $pictureName;
+
     // createdAt et updatedAt sont désormais dans Traits
 
     public function __construct()
@@ -151,5 +154,17 @@ class Candidats
     }
 
     // les getter et setter de createdAt et updatedAt sont desormais dans Traits avec PrePersist et PreUpdated
+
+    public function getPictureName(): ?string
+    {
+        return $this->pictureName;
+    }
+
+    public function setPictureName(?string $pictureName): self
+    {
+        $this->pictureName = $pictureName;
+
+        return $this;
+    }
 
 }

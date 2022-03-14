@@ -25,7 +25,7 @@ class TodosController extends AbstractController
     public function add(Request $request, ManagerRegistry $doctrine, Security $security ): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-        $user = $security->getUser();
+        // $user = $security->getUser();
 
         $todo=new Todos;
         $form = $this->createForm(TodosType::class, $todo);
@@ -34,7 +34,7 @@ class TodosController extends AbstractController
         
         if ($form->isSubmitted() && $form->isValid()) { 
             // si option 2 c'est l'utilisateur authentifié qui s'ajoute des tâches
-            $todo->addUser($user);
+            // $todo->addUser($user);
             $manager->persist($todo);
             $manager->flush();
             $message='a été ajoutée avec succes';
@@ -48,8 +48,7 @@ class TodosController extends AbstractController
 
         return $this->render('todos/add-todo.html.twig', [
             'form'=>$form->createView(),
-            'user'=>$user,
-            'controller_name' => 'TodosController',
+            // 'controller_name' => 'TodosController',
         ]);
     }
 }

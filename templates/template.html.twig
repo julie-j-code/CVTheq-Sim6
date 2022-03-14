@@ -22,7 +22,7 @@
 <body>
     <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
         <!-- Navbar Brand-->
-        <a class="navbar-brand ps-3" href="index.html">CvTech</a>
+        <a class="navbar-brand ps-3" href="{{path('dashboard')}}">CvTech</a>
         <!-- Sidebar Toggle-->
         <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i
                 class="fas fa-bars"></i></button>
@@ -125,14 +125,16 @@
                             data-bs-parent="#sidenavAccordion">
 
                             <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionTodos">
-                            <a class="nav-link" href="{{path('app_todo')}}">
-                                Liste des tâches
-                            </a>
-                            <a class="nav-link" href="{{path('add_todos')}}">
-                                Ajouter une tâche (à venir)
-                            </a>
+                                <a class="nav-link" href="{{path('app_todo')}}">
+                                    Liste des tâches
+                                </a>
+                                {% if is_granted ('ROLE_SUPER_ADMIN') %}
+                                <a class="nav-link" href="{{path('add_todos')}}">
+                                    Ajouter une tâche à un utilisateur
+                                </a>
                             </nav>
                         </div>
+                        {% endif %}
                     </div>
                 </div>
                 <div class="sb-sidenav-footer">
@@ -140,7 +142,7 @@
                     {% if app.user %}
                     {{ app.user.email }}
                     {% else %}
-                    Anonymous
+                    Utilisateur anonyme
                     {% endif %}
                 </div>
             </nav>
@@ -168,12 +170,11 @@
 
                     <div class="card mb-4">
                         <div class="card-body">
-
                             {% block body %}
-                            index
-
+                            <p class="card-text">Pour accéder à la liste des candidats et contacts des interlocuteurs
+                                disponibles, merci de vous <a href="{{path('app_login')}}">identifier</a> ou de <a
+                                    href="{{path('app_register')}}">créer un compte utilisateur</a>. </p>
                             {% endblock %}
-
                         </div>
                     </div>
                 </div>

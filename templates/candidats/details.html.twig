@@ -8,25 +8,39 @@ Détails Candidat
 
 {% block body %}
 
-{# <a href="{{ asset('uploads/pictures/' ~ candidat.pictureFilename) }}">Voir la photo</a> #}
+{# <a href="{{ asset('uploads/pictures/' ~ candidats.pictureFilename) }}">Voir la photo</a> #}
 <p class="h3"><span class="text-capitalize">{{ candidat.firstname }} {{ candidat.lastname }}</span> a {{ candidat.age }}
     ans</p>
 
 <div class="mt-5">
-    <h3>Hobbies</h3>
-    <ul class="list-group"></ul>
-    {% for hobby in candidat.hobbies %}
+    <div class="row">
 
-    <li class="list-group-item">{{hobby}}</li>
+        {% if candidat.pictureFilename %}
+        <div class="col-sm-6">
+            {# <a href="{{ asset('uploads/pictures/' ~ candidat.pictureFilename) }}">Voir la photo</a> #}
+            <img class="w-100 p-5 bg-light" src="{{ asset('uploads/pictures/' ~ candidat.pictureFilename) }}" alt="">
+        </div>
+        {% endif %}
 
 
-    {% else %} N'a pas choisi de Hobby
-    {% endfor %}
-    </ul>
-</div>
-<div class="mt-5">
-    <h3>Jobs</h3>
-    <p>{{candidat.jobs}}</p>
+        <div class="col-sm-6">
+            <div>
+                <h3>Job : {{candidat.jobs}}</h3>
+            </div>
+            <div class="mt-5">
+                <h3>Hobbies</h3>
+                <ul class="list-group"></ul>
+                {% for hobby in candidat.hobbies %}
+
+                <li class="list-group-item">{{hobby}}</li>
+
+                {% else %} N'a pas choisi de Hobby
+                {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+
 
 
     {% endblock %}
