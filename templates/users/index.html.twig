@@ -3,37 +3,38 @@
 {% block title %}Utilisateurs inscrits{% endblock %}
 
 {% block PageTitle %} Utilisateurs inscrits
-    
+
 {% endblock %}
 
 {% block body %}
 
+<table class="table table-striped text-capitalize">
 
+    <thead>
+        <tr>
+            <th class="scop">Id</th>
+            <th class="scop">Email</th>
+            <th class="scop">Photo</th>
+        </tr>
 
-    <table class="table table-striped text-capitalize">
+    </thead>
+    <tbody>
+        {% for user in users %}
+        <tr>
+            <td class="scop">{{user.id}}</td>
+            <td class="scop">{{user.email}}</td>
+            <td class="scop">
+                <img class="w-25 p-5 bg-light" src="{{ asset('uploads/pictures/' ~ user.pictureFilename) }}"
+                    alt="">
+            </td>
+        </tr>
+        {% endfor %}
 
-        <thead>
-            <tr>
-                <th class="scop">Id</th>
-                <th class="scop">Email</th>
-                {# <th class="scop">Prénom</th> #}
-            </tr>
+    </tbody>
+</table>
 
-        </thead>
-        <tbody>
-            {% for user in users %}
-            <tr>
-                <td class="scop">{{user.id}}</td>
-                <td class="scop">{{user.email}}</td>
-                {# <td class="scop">{{user.lastname}}</td> #}
-            </tr>
-            {% endfor %}
-
-        </tbody>
-    </table>
-
-    <div class="alert alert-info">
-        <p>Total des utilisateurs : {{users | length}}</p>
-    </div>
+<div class="alert alert-info">
+    <p>Total des utilisateurs : {{users | length}}</p>
+</div>
 
 {% endblock %}

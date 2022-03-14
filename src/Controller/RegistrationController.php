@@ -49,11 +49,15 @@ class RegistrationController extends AbstractController
             );
 
             $photo = $form->get('picture')->getData();
+            $default = 'user.jpg';
             // this condition is needed because the 'brochure' field is not required
             // so the PDF file must be processed only when a file is uploaded
             if ($photo) {
                 $directory = $this->getParameter('pictures_directory');
                 $user->setPictureFilename($uploader->uploadFile($photo, $directory));
+            }else {
+                # code...
+                $user->setPictureFilename($default);
             }
 
             // ...
