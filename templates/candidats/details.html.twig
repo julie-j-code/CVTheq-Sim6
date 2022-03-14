@@ -7,6 +7,26 @@ Détails Candidat
 {% endblock %}
 
 {% block body %}
-<p><span class="text-capitalize">{{ candidat.firstname }} {{ candidat.lastname }}</span> a {{ candidat.age }} ans</p>
 
-{% endblock %}
+{# <a href="{{ asset('uploads/pictures/' ~ candidat.pictureFilename) }}">Voir la photo</a> #}
+<p class="h3"><span class="text-capitalize">{{ candidat.firstname }} {{ candidat.lastname }}</span> a {{ candidat.age }}
+    ans</p>
+
+<div class="mt-5">
+    <h3>Hobbies</h3>
+    <ul class="list-group"></ul>
+    {% for hobby in candidat.hobbies %}
+
+    <li class="list-group-item">{{hobby}}</li>
+
+
+    {% else %} N'a pas choisi de Hobby
+    {% endfor %}
+    </ul>
+</div>
+<div class="mt-5">
+    <h3>Jobs</h3>
+    <p>{{candidat.jobs}}</p>
+
+
+    {% endblock %}

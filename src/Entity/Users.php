@@ -56,7 +56,7 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function setPictureFilename($pictureFilename)
     {
-        $this->brochureFilename = $pictureFilename;
+        $this->pictureFilename = $pictureFilename;
 
         return $this;
     }

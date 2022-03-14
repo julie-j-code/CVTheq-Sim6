@@ -8,6 +8,7 @@ use ListAllCandidatsEvent;
 use App\Form\CandidatsType;
 use App\Services\MailerService;
 use App\Repository\CandidatsRepository;
+use App\Services\UploaderService;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Request;
@@ -74,7 +75,7 @@ class CandidatsController extends AbstractController
 
 
     #[Route('/add', name: 'candidats-add')]
-    public function addCandidat(ManagerRegistry $doctrine, Request $request, MailerService $mailer): Response
+    public function addCandidat(ManagerRegistry $doctrine, Request $request, MailerService $mailer, UploaderService $uploader): Response
     {
 
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
@@ -84,6 +85,15 @@ class CandidatsController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {
+            $photo = $form->get('picture')->getData();
+            // this condition is needed because the 'brochure' field is not required
+            // so the PDF file must be processed only when a file is uploaded
+            if ($photo) {
+                $directory = $this->getParameter('pictures_directory');
+                $candidat->setPictureFilename($uploader->uploadFile($photo, $directory));
+            }
+
+            // ...
             $manager->persist($candidat);
             $manager->flush();
             $message = " a été ajouté avec succès";

@@ -39,6 +39,9 @@ class Candidats
     #[ORM\ManyToOne(targetEntity: Jobs::class, inversedBy: 'candidats')]
     private $jobs;
 
+    #[ORM\Column(type: 'string', length:255, nullable:true)]
+    private $pictureFilename;
+
     // createdAt et updatedAt sont désormais dans Traits
 
     public function __construct()
@@ -131,6 +134,18 @@ class Candidats
     public function setJobs(?Jobs $jobs): self
     {
         $this->jobs = $jobs;
+
+        return $this;
+    }
+
+    public function getPictureFilename()
+    {
+        return $this->pictureFilename;
+    }
+
+    public function setPictureFilename($pictureFilename)
+    {
+        $this->pictureFilename = $pictureFilename;
 
         return $this;
     }
