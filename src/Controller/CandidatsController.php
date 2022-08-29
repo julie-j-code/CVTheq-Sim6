@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use addCandidatEvent;
 use App\Entity\Candidats;
-use ListAllCandidatsEvent;
 use App\Form\CandidatsType;
 use App\Services\MailerService;
 use App\Repository\CandidatsRepository;
@@ -19,6 +18,7 @@ use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use  App\Events\ListAllCandidatsEvent;
 
 #[Route('/candidats'), IsGranted('ROLE_USER')]
 
@@ -78,7 +78,7 @@ class CandidatsController extends AbstractController
     public function addCandidat(ManagerRegistry $doctrine, Request $request, MailerService $mailer, UploaderService $uploader): Response
     {
 
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        // $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $manager = $doctrine->getManager();
         $candidat = new Candidats;
         $form = $this->createForm(CandidatsType::class, $candidat);

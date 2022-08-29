@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Events;
+
 use App\Entity\Candidats;
 
 use Symfony\Contracts\EventDispatcher\Event;

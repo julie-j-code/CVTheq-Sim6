@@ -35,6 +35,9 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\ManyToOne(targetEntity: Todos::class, inversedBy: 'user')]
     private $todos;
 
+    #[ORM\Column(type: 'string', length: 255)]
+    private $company;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -145,6 +148,18 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     {
         return $this->email;
         return $this->todos;
+    }
+
+    public function getCompany(): ?string
+    {
+        return $this->company;
+    }
+
+    public function setCompany(string $company): self
+    {
+        $this->company = $company;
+
+        return $this;
     }
 
 

@@ -25,7 +25,7 @@ services:
 
     App\EventListener\CandidatsListener:
         tags:
-            - { name: kernel.event_listener, event: candidats-add }
+            - { name: kernel.event_listener, event: add-candidat }
             # - { name: kernel.event_listener, event: kernel.request, method: logKernelRequest, priority: -5000 }
             - { name: kernel.event_listener, event: pagination }
             # - { name: kernel.event_listener, event: personne.list_alls, method: onListAllPersonnes2, priority: 100 }  

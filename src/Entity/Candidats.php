@@ -45,6 +45,9 @@ class Candidats
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $pictureName;
 
+    #[ORM\Column(type: 'string', length: 255)]
+    private $email;
+
     // createdAt et updatedAt sont désormais dans Traits
 
     public function __construct()
@@ -163,6 +166,18 @@ class Candidats
     public function setPictureName(?string $pictureName): self
     {
         $this->pictureName = $pictureName;
+
+        return $this;
+    }
+
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(string $email): self
+    {
+        $this->email = $email;
 
         return $this;
     }

@@ -3,11 +3,12 @@
 namespace App\EventSubscriber;
 
 use Psr\Log\LoggerInterface;
+use App\Events\AddCandidatEvent;
 use App\Services\MailerService;
-use App\Event\AddCandidatEvent;
+// use Doctrine\Bundle\DoctrineBundle\EventSubscriber\EventSubscriberInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class PersonneEventSubscriber implements EventSubscriberInterface
+class CandidatsEventSubcribers implements EventSubscriberInterface
 {
     public function __construct(
         private LoggerInterface $logger,

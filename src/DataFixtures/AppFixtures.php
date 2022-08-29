@@ -20,6 +20,7 @@ class AppFixtures extends Fixture
             $candidat = new Candidats();
             $candidat->setLastname($faker->lastName);
             $candidat->setFirstname($faker->firstName);
+            $candidat->setEmail("candidat$i@gmail.com");
             $candidat->setAge(mt_rand(22, 50));
             $manager->persist($candidat);
         }

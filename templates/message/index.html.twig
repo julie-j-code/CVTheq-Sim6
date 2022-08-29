@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello SymfonyMakeController!{% endblock %}
+
+{% block body %}
+<style>
+    .example-wrapper {
+        margin: 1em auto;
+        max-width: 800px;
+        width: 95%;
+        font: 18px/1.5 sans-serif;
+    }
+
+    .example-wrapper code {
+        background: #F5F5F5;
+        padding: 2px 6px;
+    }
+</style>
+
+<div class="example-wrapper">
+    <h1>{{ controller_name }}! ✅</h1>
+
+    Ici, l'utilisateur {{ user}}, qui est un des recruteur potentiel identifié sur la plateforme va pouvoir contacter le candidat
+    de son choix. Il s'agit donc de faire en sorte de pré-remplir les champs de formulaire:
+
+    <div>
+
+
+
+        
+
+        
+        {{ form_start(candidat_contact) }}
+        {{form_row(candidat_contact.email, {'attr': {'value': from}})}}
+        {{form_row(candidat_contact.subject, {'attr': {'value': 'Opportunité de poste'}})}}
+        {{ form_end(candidat_contact) }}
+
+    </div>
+</div>
+{% endblock %}

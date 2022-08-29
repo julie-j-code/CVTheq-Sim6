@@ -26,9 +26,11 @@ class UsersFixtures extends Fixture
         $admin1 = new Users();
         $admin1->setEmail('admin@gmail.com');
         $admin1->setPassword($this->hasher->hashPassword($admin1, 'admin'));
+        $admin1->setCompany('Portail Emploi');
         $admin1->setRoles(['ROLE_SUPER_ADMIN']);
         $admin2 = new Users();
         $admin2->setEmail('admin2@gmail.com');
+        $admin2->setCompany('Portail Emploi');
         $admin2->setPassword($this->hasher->hashPassword($admin2, 'admin'));
         $admin2->setRoles(['ROLE_ADMIN']);
         $manager->persist($admin1);
@@ -48,6 +50,7 @@ class UsersFixtures extends Fixture
             $users = new Users();
             $users->setEmail("user$i@gmail.com");
             $users->setPassword($this->hasher->hashPassword($users, 'user'));
+            $users->setCompany($faker->realText(15));
             $users->setPictureFilename('user.jpg');
             $randomInputIndex = rand(0, count($todos));
             $randomInputValue=$todos[$randomInputIndex];

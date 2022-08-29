@@ -2,8 +2,8 @@
 
 namespace App\EventListener;
 
-use AddCandidatEvent;
-use ListAllCandidatsEvent;
+use App\Events\AddCandidatEvent;
+use App\Events\ListAllCandidatsEvent;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpKernel\Event\KernelEvent;
 

@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Events;
+
 use App\Entity\Candidats;
 use Symfony\Contracts\EventDispatcher\Event;
 
@@ -7,7 +9,7 @@ use Symfony\Contracts\EventDispatcher\Event;
 class AddCandidatEvent extends Event
 {
 
-    const ADD_CANDIDAT_EVENT = 'candidats-add';
+    const ADD_CANDIDAT_EVENT = 'add-candidat';
 
     public function __construct(private Candidats $candidat) {}
 
