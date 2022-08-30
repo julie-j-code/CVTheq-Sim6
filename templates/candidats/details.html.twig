@@ -39,11 +39,42 @@ Détails Candidat
                 </ul>
             </div>
         </div>
+        <!-- Button trigger modal -->
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"> Contacter
+            le candidat
+        </button>
+    </div>
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Contacter le candidat</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    {{ form_start(candidat_contact) }}
+                    {{form_row(candidat_contact.email, {'attr': {'value': from}})}}
+                    {{form_row(candidat_contact.subject, {'attr': {'value': 'Opportunité de poste'}})}}
+                    {{ form_end(candidat_contact) }}
+                </div>
+                <!-- <div class="modal-footer">
+        </div> -->
+            </div>
+        </div>
     </div>
 
 
 
-    
+
+
+
+
+
+
+
 
 
 

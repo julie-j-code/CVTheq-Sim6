@@ -22,7 +22,6 @@ class CandidatsType extends AbstractType
             ->add('firstname')
             ->add('lastname')
             ->add('age')
-            ->add('company')
             // ->add('createdAt')
             // ->add('updatedAt')
             ->add('profiles', EntityType::class,[

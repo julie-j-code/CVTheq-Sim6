@@ -10,7 +10,7 @@ My Todo List
 
 <ol class="list-group">
     {% for name,content in app.session.get('todos') %}
-    <li class="list-group-item">{{name}} : {{content}}</li>
+    <li class="list-group-item d-flex">{{name}} : {{content}} <span class="ms-auto"><a href="{{ path('todo_delete', {name: name}) }}" class="btn btn-warning btn-sm mx-2"> supprimer </a><a href="{{ path('todo_update', {name: name, content: content}) }}" class="btn btn-warning btn-sm mx-2"> modifier (en cours) </a></span></li>
     {% endfor %}
 </ol>
 

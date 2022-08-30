@@ -8,17 +8,16 @@ use App\Form\CandidatsType;
 use App\Services\MailerService;
 use App\Repository\CandidatsRepository;
 use App\Services\UploaderService;
-use Doctrine\Persistence\ObjectManager;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use  App\Events\ListAllCandidatsEvent;
+use App\Form\MessageFormType;
 
 #[Route('/candidats'), IsGranted('ROLE_USER')]
 
@@ -31,6 +30,7 @@ class CandidatsController extends AbstractController
     }
 
     #[Route('/', name: 'candidats')]
+
     public function index(CandidatsRepository $candidatsRepository): Response
 
     {
@@ -54,22 +54,53 @@ class CandidatsController extends AbstractController
 
     #[Route('/{id<\d+>}', name: 'candidat-detail')]
     // public function detail(CandidatsRepository $candidatsRepository, $id): Response
-    public function detail(Candidats $candidat = null): Response
+    public function detail(Candidats $candidat = null, Request $request, MailerService $mailer): Response
 
     {
-        // on peut ne passer que l'entité à function, grâce au Param convertor...
-        // $candidat = $candidatsRepository->find($id);
+        // on peut ne passer que l'entité à function, grâce au Param convertor... au lieu de $candidat = $candidatsRepository->find($id);
         if (!$candidat) {
             $this->addFlash(
                 'error',
-                // "Le candidat d'id $id n'existe pas"
                 "Ce candidat n'existe pas"
             );
             return $this->redirectToRoute('candidats');
         }
 
+        // partie traitement du formulaire qui sera intégré dans modale
+        $form = $this->createForm(MessageFormType::class);
+        // on récupère l'identifiant de l'utilisateur(le recruteur) en cours
+        $user = $this->getUser();
+        // on peut laisser l'occasion au recruteur de fournir une autre adresse
+        $from = $this->getUser()->getUserIdentifier();
+        $form->handleRequest($request);
+        $to = $candidat->getEmail();
+
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $mailMessage = $form->get('message')->getData();
+            // si le from a changé entre temps parce que le client a fourni une autre adresse que son identifiant
+            $from = $form->get('email')->getData();
+            $subject = $form->get('subject')->getData();
+            $fullName = $form->get('fullName')->getData();
+            $newSubject = $subject . " de la part de " . $fullName;
+            // dd($newSubject);
+            $this->addFlash(
+                'success',
+                'le candidat a bien été ajouté'
+            );
+            $mailer->contactCandidat($mailMessage, $from, $to, $newSubject);
+
+
+            return $this->redirectToRoute('candidats');
+        }
+
+
         return $this->render('candidats/details.html.twig', [
-            'candidat' => $candidat
+            'candidat' => $candidat,
+            'candidat_contact' => $form->createView(),
+            'user' => $user,
+            'from' => $from
         ]);
     }
 
@@ -99,14 +130,14 @@ class CandidatsController extends AbstractController
             $message = " a été ajouté avec succès";
             $addCandidatEvent = new AddCandidatEvent($candidat);
             $this->dispatcher->dispatch($addCandidatEvent, AddCandidatEvent::ADD_CANDIDAT_EVENT);
-            $mailMessage = $candidat->getFirstname().' '.$candidat->getLastname().' '.$message;
+            $mailMessage = $candidat->getFirstname() . ' ' . $candidat->getLastname() . ' ' . $message;
             $this->addFlash(
                 'success',
                 'le candidat a bien été ajouté'
             );
-            $mailer->sendEmail(content :  $mailMessage);
+            $mailer->sendEmail(content: $mailMessage);
 
-            
+
             return $this->redirectToRoute('candidats');
         }
 
@@ -166,18 +197,18 @@ class CandidatsController extends AbstractController
     {
 
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
-        // Récupérer la personne
+        // Récupérer le candidat
         if ($candidat) {
-            // Si la personne existe => le supprimer et retourner un flashMessage de succés
+            // Si le candidat existe => le supprimer et retourner un flashMessage de succés
             $manager = $doctrine->getManager();
             // Ajoute la fonction de suppression dans la transaction
             $manager->remove($candidat);
             // Exécuter la transacition
             $manager->flush();
-            $this->addFlash('success', "La personne a été supprimé avec succès");
+            $this->addFlash('success', "Le candidat a été supprimé avec succès");
         } else {
             //Sinon  retourner un flashMessage d'erreur
-            $this->addFlash('error', "Personne innexistante");
+            $this->addFlash('error', "Candidat innexistant");
         }
         return $this->redirectToRoute('pagination');
     }
@@ -195,7 +226,7 @@ class CandidatsController extends AbstractController
         // EventListener
         $listAllCandidatsEvent = new ListAllCandidatsEvent(count($candidats));
         $this->dispatcher->dispatch($listAllCandidatsEvent, ListAllCandidatsEvent::LIST_CANDIDAT_EVENT);
-        
+
         return $this->render('candidats/index.html.twig', [
             'candidats' => $candidats,
             'isPaginated' => true,
